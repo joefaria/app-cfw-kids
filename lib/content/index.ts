@@ -1,3 +1,5 @@
 export * from './types'
 export * from './catecismo-breve'
 export * from './cfw-chapters'
+export * from './doctrine-cards'
+export * from './situation-cards'
