@@ -1,0 +1,246 @@
+// Confissão de Fé de Westminster (1647) — 33 capítulos
+// Estrutura para indexar os capítulos e facilitar a criação de DoctrineCards
+
+import type { DoctrineTheme } from './types'
+
+export interface CFWCapitulo {
+  numero: number
+  titulo: string
+  temas: DoctrineTheme[]
+  totalParagrafos: number
+  resumo: string // síntese do capítulo para uso nas cartas
+}
+
+export const CFW_CAPITULOS: CFWCapitulo[] = [
+  {
+    numero: 1,
+    titulo: 'Da Sagrada Escritura',
+    temas: ['escritura'],
+    totalParagrafos: 10,
+    resumo: 'A Bíblia é a Palavra de Deus, regra infalível de fé e vida. Ela é suficiente, clara e interpreta a si mesma.',
+  },
+  {
+    numero: 2,
+    titulo: 'De Deus e da Santa Trindade',
+    temas: ['deus', 'trindade'],
+    totalParagrafos: 3,
+    resumo: 'Deus é único, eterno, infinito e imutável. Na unidade da divindade há três pessoas: Pai, Filho e Espírito Santo.',
+  },
+  {
+    numero: 3,
+    titulo: 'Do Decreto Eterno de Deus',
+    temas: ['deus'],
+    totalParagrafos: 8,
+    resumo: 'Deus, desde a eternidade, ordenou tudo o que acontece, sem ser o autor do pecado nem violar a liberdade das criaturas.',
+  },
+  {
+    numero: 4,
+    titulo: 'Da Criação',
+    temas: ['criacao'],
+    totalParagrafos: 2,
+    resumo: 'Deus criou tudo do nada, em seis dias, e tudo muito bom. O homem foi criado à imagem de Deus.',
+  },
+  {
+    numero: 5,
+    titulo: 'Da Providência',
+    temas: ['providencia'],
+    totalParagrafos: 7,
+    resumo: 'Deus governa e sustenta todas as coisas com sabedoria e cuidado, especialmente sua Igreja.',
+  },
+  {
+    numero: 6,
+    titulo: 'Da Queda do Homem, do Pecado e do seu Castigo',
+    temas: ['queda', 'pecado'],
+    totalParagrafos: 6,
+    resumo: 'Adão e Eva pecaram e caíram. Toda a humanidade herdou essa natureza corrompida e está sujeita à morte e ao juízo.',
+  },
+  {
+    numero: 7,
+    titulo: 'Do Pacto de Deus com o Homem',
+    temas: ['salvacao'],
+    totalParagrafos: 6,
+    resumo: 'Deus firmou o pacto da graça, oferecendo livremente vida e salvação a pecadores por Jesus Cristo.',
+  },
+  {
+    numero: 8,
+    titulo: 'De Cristo, o Mediador',
+    temas: ['jesus', 'salvacao'],
+    totalParagrafos: 8,
+    resumo: 'Jesus Cristo é verdadeiro Deus e verdadeiro homem, o único Mediador entre Deus e os homens.',
+  },
+  {
+    numero: 9,
+    titulo: 'Do Livre-Arbítrio',
+    temas: ['pecado'],
+    totalParagrafos: 5,
+    resumo: 'O homem tem vontade, mas após a queda é incapaz de se voltar a Deus sem a graça do Espírito Santo.',
+  },
+  {
+    numero: 10,
+    titulo: 'Da Eficaz Vocação',
+    temas: ['salvacao', 'espirito-santo'],
+    totalParagrafos: 4,
+    resumo: 'Deus chama eficazmente os seus eleitos pelo Espírito, iluminando seu entendimento e renovando sua vontade.',
+  },
+  {
+    numero: 11,
+    titulo: 'Da Justificação',
+    temas: ['justificacao', 'salvacao'],
+    totalParagrafos: 6,
+    resumo: 'Deus justifica o pecador gratuitamente, perdoando seus pecados e imputando a justiça de Cristo, recebida pela fé.',
+  },
+  {
+    numero: 12,
+    titulo: 'Da Adoção',
+    temas: ['salvacao'],
+    totalParagrafos: 1,
+    resumo: 'Os justificados são adotados como filhos de Deus, com todos os privilégios dessa relação.',
+  },
+  {
+    numero: 13,
+    titulo: 'Da Santificação',
+    temas: ['santificacao'],
+    totalParagrafos: 3,
+    resumo: 'O Espírito Santo progressivamente renova o crente à imagem de Cristo, capacitando-o a morrer para o pecado.',
+  },
+  {
+    numero: 14,
+    titulo: 'Da Fé Salvadora',
+    temas: ['fe'],
+    totalParagrafos: 3,
+    resumo: 'A fé salvadora é dom de Deus, pela qual a pessoa recebe e descansa em Cristo somente para a salvação.',
+  },
+  {
+    numero: 15,
+    titulo: 'Do Arrependimento para a Vida',
+    temas: ['arrependimento'],
+    totalParagrafos: 6,
+    resumo: 'O arrependimento é dom de Deus: tristeza pelo pecado, virada para Deus, com propósito de nova obediência.',
+  },
+  {
+    numero: 16,
+    titulo: 'Das Boas Obras',
+    temas: ['santificacao', 'obediencia'],
+    totalParagrafos: 7,
+    resumo: 'As boas obras são fruto da fé e da graça, ordenadas por Deus, e devem ser feitas para a sua glória.',
+  },
+  {
+    numero: 17,
+    titulo: 'Da Perseverança dos Santos',
+    temas: ['salvacao', 'santificacao'],
+    totalParagrafos: 3,
+    resumo: 'Os verdadeiros crentes não caem definitivamente da graça; Deus os guarda e os preserva até ao fim.',
+  },
+  {
+    numero: 18,
+    titulo: 'Da Certeza da Graça e da Salvação',
+    temas: ['fe', 'salvacao'],
+    totalParagrafos: 4,
+    resumo: 'O crente pode ter certeza de sua salvação pelo testemunho do Espírito e os frutos da vida cristã.',
+  },
+  {
+    numero: 19,
+    titulo: 'Da Lei de Deus',
+    temas: ['lei', 'mandamentos'],
+    totalParagrafos: 7,
+    resumo: 'A lei moral resume-se nos dez mandamentos e continua sendo regra de vida para os crentes.',
+  },
+  {
+    numero: 20,
+    titulo: 'Da Liberdade Cristã e da Liberdade de Consciência',
+    temas: ['salvacao'],
+    totalParagrafos: 4,
+    resumo: 'Cristo liberta os crentes da culpa, poder e penalidade do pecado, e da escravidão às tradições humanas.',
+  },
+  {
+    numero: 21,
+    titulo: 'Do Culto Religioso e do Dia de Sábado',
+    temas: ['mandamentos', 'igreja'],
+    totalParagrafos: 8,
+    resumo: 'Deus deve ser adorado conforme prescrito em sua Palavra. O Dia do Senhor é reservado para o culto.',
+  },
+  {
+    numero: 22,
+    titulo: 'Dos Juramentos e Votos Lícitos',
+    temas: ['obediencia'],
+    totalParagrafos: 7,
+    resumo: 'O juramento deve ser feito somente a Deus, com veracidade e seriedade. Votos são obrigações sagradas.',
+  },
+  {
+    numero: 23,
+    titulo: 'Das Autoridades Civis',
+    temas: ['obediencia'],
+    totalParagrafos: 4,
+    resumo: 'Deus instituiu as autoridades civis. Os cristãos devem respeitá-las e obedecer, exceto quando contradizem Deus.',
+  },
+  {
+    numero: 24,
+    titulo: 'Do Matrimônio e do Divórcio',
+    temas: ['familia'],
+    totalParagrafos: 6,
+    resumo: 'O casamento é instituição de Deus, entre um homem e uma mulher, para auxílio mútuo e criação de filhos.',
+  },
+  {
+    numero: 25,
+    titulo: 'Da Igreja',
+    temas: ['igreja'],
+    totalParagrafos: 6,
+    resumo: 'A Igreja universal consiste de todos os eleitos de todos os tempos. A Igreja visível é o corpo de profissantes da fé.',
+  },
+  {
+    numero: 26,
+    titulo: 'Da Comunhão dos Santos',
+    temas: ['igreja'],
+    totalParagrafos: 3,
+    resumo: 'Os crentes têm comunhão uns com os outros nos dons e graças de Deus, ajudando-se mutuamente.',
+  },
+  {
+    numero: 27,
+    titulo: 'Dos Sacramentos',
+    temas: ['sacramentos'],
+    totalParagrafos: 5,
+    resumo: 'Os sacramentos são sinais e selos do pacto da graça, instituídos por Cristo: batismo e Ceia do Senhor.',
+  },
+  {
+    numero: 28,
+    titulo: 'Do Batismo',
+    temas: ['sacramentos'],
+    totalParagrafos: 7,
+    resumo: 'O batismo é o sacramento de iniciação no pacto da graça, sinal da união com Cristo, administrado pelo lavar com água.',
+  },
+  {
+    numero: 29,
+    titulo: 'Da Ceia do Senhor',
+    temas: ['sacramentos'],
+    totalParagrafos: 8,
+    resumo: 'Na Ceia, o pão e o vinho representam e selam a morte de Cristo. Os crentes se alimentam de Cristo pela fé.',
+  },
+  {
+    numero: 30,
+    titulo: 'Das Censuras Eclesiásticas',
+    temas: ['igreja'],
+    totalParagrafos: 4,
+    resumo: 'A Igreja tem poder de exercer disciplina para corrigir os erros, preservar a honra de Cristo e restaurar o pecador.',
+  },
+  {
+    numero: 31,
+    titulo: 'Dos Sínodos e Concílios',
+    temas: ['igreja'],
+    totalParagrafos: 4,
+    resumo: 'Assembleias de pastores e anciãos podem reunir-se para resolver questões de doutrina e prática da Igreja.',
+  },
+  {
+    numero: 32,
+    titulo: 'Do Estado dos Homens após a Morte e da Ressurreição dos Mortos',
+    temas: ['morte-e-ressurreicao', 'gloria'],
+    totalParagrafos: 3,
+    resumo: 'Após a morte, as almas dos crentes vão para Deus. Haverá ressurreição de todos os mortos no último dia.',
+  },
+  {
+    numero: 33,
+    titulo: 'Do Juízo Final',
+    temas: ['morte-e-ressurreicao', 'gloria'],
+    totalParagrafos: 3,
+    resumo: 'Cristo julgará todos no último dia. Os eleitos herdarão a vida eterna; os réprobos irão para o eterno castigo.',
+  },
+]
