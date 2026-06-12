@@ -1,8 +1,8 @@
 'use client'
 
-import { Lightbulb, SpeakerHigh } from '@phosphor-icons/react'
+import { Lightbulb, SpeakerHigh, Question } from '@phosphor-icons/react'
 import type { SituationCard as SituationCardType } from '@/lib/content/types'
-import { AGE_CONFIG } from './age-config'
+import { AGE_LABEL, AGE_COLORS } from './card-config'
 import { cn } from '@/lib/utils'
 
 interface Props {
@@ -12,89 +12,96 @@ interface Props {
   className?: string
 }
 
-function DifficultyDots({ level }: { level: 1 | 2 | 3 }) {
-  return (
-    <div className="flex gap-1" aria-label={`Dificuldade ${level} de 3`}>
-      {[1, 2, 3].map((i) => (
-        <span
-          key={i}
-          className={cn(
-            'block h-2 w-2 rounded-full',
-            i <= level ? 'bg-current opacity-80' : 'bg-current opacity-20'
-          )}
-        />
-      ))}
-    </div>
-  )
+const SCENARIO_SIZE: Record<string, string> = {
+  '0-5':   'text-2xl leading-snug',
+  '6-8':   'text-xl leading-relaxed',
+  '9-11':  'text-lg leading-relaxed',
+  '12-14': 'text-base leading-relaxed',
 }
 
 export function SituationCard({ card, showHint = false, showParentMode = false, className }: Props) {
-  const cfg = AGE_CONFIG[card.ageGroup]
+  const colors = AGE_COLORS[card.ageGroup]
+  const scenarioSize = SCENARIO_SIZE[card.ageGroup] ?? 'text-base leading-relaxed'
 
   return (
-    <article
-      className={cn(
-        'flex flex-col gap-4 rounded-2xl border p-6 shadow-sm transition-shadow hover:shadow-md',
-        cfg.color,
-        cfg.colorBorder,
-        cfg.colorText,
-        className
-      )}
+    <div
+      className={cn('relative w-full overflow-hidden rounded-[1.5rem] shadow-xl', className)}
+      style={{ border: `3px solid ${colors.border}` }}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between gap-2">
+      {/* Header bar */}
+      <div
+        className="flex items-center justify-between px-5 py-3"
+        style={{ backgroundColor: colors.border }}
+      >
         <span
-          className={cn(
-            'rounded-full px-2.5 py-0.5 text-xs font-semibold tracking-wide',
-            cfg.colorBadge,
-            cfg.colorBadgeText
-          )}
+          className="rounded-full px-3 py-1 text-xs font-bold"
+          style={{ backgroundColor: colors.badge, color: colors.badgeText }}
         >
-          {cfg.label}
+          {AGE_LABEL[card.ageGroup]}
         </span>
-        <DifficultyDots level={card.difficulty} />
+        <div className="flex gap-1">
+          {[1, 2, 3].map((i) => (
+            <span
+              key={i}
+              className={cn(
+                'block h-2 w-2 rounded-full',
+                i <= card.difficulty ? 'bg-white' : 'bg-white/30'
+              )}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Scenario */}
-      <p className={cn('font-medium', cfg.summarySize)}>{card.scenario}</p>
+      {/* Scenario zone */}
+      <div className="px-5 py-6" style={{ backgroundColor: colors.bg }}>
+        <p className={cn('font-semibold text-zinc-800', scenarioSize)}>
+          {card.scenario}
+        </p>
+      </div>
 
       {/* Question */}
-      <p className="text-sm font-semibold opacity-70">{card.question}</p>
+      <div
+        className="flex items-start gap-2 px-5 py-4 dark:bg-zinc-900"
+        style={{ backgroundColor: 'white' }}
+      >
+        <Question size={18} weight="bold" className="mt-0.5 shrink-0 text-zinc-400" />
+        <p className="text-sm font-semibold text-zinc-600">{card.question}</p>
+      </div>
 
-      {/* Parent narration — only when 0-5 mode */}
+      {/* Parent narration */}
       {showParentMode && card.ageGroup === '0-5' && card.parentNarration && (
-        <div className="flex items-start gap-2 rounded-xl border border-amber-300/50 bg-white/40 px-4 py-3 dark:bg-black/20">
-          <SpeakerHigh size={15} weight="fill" className="mt-0.5 shrink-0 text-amber-500" />
+        <div className="mx-4 mb-4 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
+          <SpeakerHigh size={16} weight="fill" className="mt-0.5 shrink-0 text-amber-500" />
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider opacity-60">Como o pai conta</p>
-            <p className="text-sm italic leading-snug">{card.parentNarration}</p>
+            <p className="mb-1 text-xs font-bold uppercase tracking-wide text-amber-500">Como o pai conta</p>
+            <p className="text-sm italic text-amber-900">&ldquo;{card.parentNarration}&rdquo;</p>
           </div>
         </div>
       )}
 
-      {/* Hint — revealed after attempt */}
+      {/* Hint */}
       {showHint && card.hint && (
-        <div className="flex items-start gap-2 rounded-xl border border-current/10 bg-white/30 px-4 py-3 dark:bg-black/20">
-          <Lightbulb size={15} weight="fill" className="mt-0.5 shrink-0 opacity-60" />
-          <p className="text-sm opacity-75">{card.hint}</p>
+        <div className="mx-4 mb-4 flex items-start gap-2 rounded-2xl border border-zinc-100 bg-zinc-50 px-4 py-3">
+          <Lightbulb size={15} weight="fill" className="mt-0.5 shrink-0 text-zinc-400" />
+          <p className="text-sm text-zinc-500">{card.hint}</p>
         </div>
       )}
 
-      {/* Theme tags */}
-      <div className="flex flex-wrap gap-1.5">
-        {card.themes.map((theme) => (
+      {/* Footer */}
+      <div
+        className="flex flex-wrap items-center gap-1.5 border-t px-5 py-3"
+        style={{ borderColor: colors.border, backgroundColor: 'white' }}
+      >
+        {card.themes.slice(0, 3).map((t) => (
           <span
-            key={theme}
-            className={cn(
-              'rounded-full px-2 py-0.5 text-xs opacity-70',
-              cfg.colorBadge,
-              cfg.colorBadgeText
-            )}
+            key={t}
+            className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
+            style={{ backgroundColor: colors.badge, color: colors.badgeText }}
           >
-            {theme}
+            {t}
           </span>
         ))}
       </div>
-    </article>
+    </div>
   )
 }

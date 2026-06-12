@@ -1,9 +1,8 @@
 'use client'
 
-import { BookOpen, Star, ChatDots } from '@phosphor-icons/react'
-import type { DoctrineCard as DoctrineCardType } from '@/lib/content/types'
-import type { AgeGroup } from '@/lib/content/types'
-import { AGE_CONFIG, SOURCE_LABEL } from './age-config'
+import { BookOpen, Star } from '@phosphor-icons/react'
+import type { DoctrineCard as DoctrineCardType, AgeGroup } from '@/lib/content/types'
+import { getThemeVisual, SOURCE_LABEL } from './card-config'
 import { cn } from '@/lib/utils'
 
 interface Props {
@@ -13,115 +12,139 @@ interface Props {
   className?: string
 }
 
-function DifficultyDots({ level }: { level: 1 | 2 | 3 }) {
-  return (
-    <div className="flex gap-1" aria-label={`Dificuldade ${level} de 3`}>
-      {[1, 2, 3].map((i) => (
-        <span
-          key={i}
-          className={cn(
-            'block h-2 w-2 rounded-full',
-            i <= level ? 'bg-current opacity-80' : 'bg-current opacity-20'
-          )}
-        />
-      ))}
-    </div>
-  )
+const SUMMARY_SIZE: Record<AgeGroup, string> = {
+  '0-5':   'text-2xl leading-snug',
+  '6-8':   'text-xl leading-relaxed',
+  '9-11':  'text-lg leading-relaxed',
+  '12-14': 'text-base leading-relaxed',
 }
 
 export function DoctrineCard({ card, ageGroup, showParentMode = false, className }: Props) {
-  const cfg = AGE_CONFIG[ageGroup]
+  const visual = getThemeVisual(card.themes[0])
   const summary = card.summaries[ageGroup] ?? card.fullText
+  const Icon = visual.Icon
 
   return (
-    <article
-      className={cn(
-        'flex flex-col gap-4 rounded-2xl border p-6 shadow-sm transition-shadow hover:shadow-md',
-        cfg.color,
-        cfg.colorBorder,
-        cfg.colorText,
-        className
-      )}
+    <div
+      className={cn('relative w-full rounded-[1.5rem] overflow-hidden shadow-xl', className)}
+      style={{ border: `3px solid ${visual.frameBorder}` }}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              'rounded-full px-2.5 py-0.5 text-xs font-semibold tracking-wide',
-              cfg.colorBadge,
-              cfg.colorBadgeText
-            )}
+      {/* Art zone */}
+      <div
+        className="relative flex h-44 items-end overflow-hidden"
+        style={{ background: `linear-gradient(160deg, ${visual.artFrom}, ${visual.artTo})` }}
+      >
+        {/* Dot pattern */}
+        <div
+          className="absolute inset-0 opacity-15"
+          style={{
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1.5px, transparent 1.5px)',
+            backgroundSize: '22px 22px',
+          }}
+        />
+
+        {/* Large icon — centered, floating */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Icon size={104} weight="duotone" className="text-white/50" />
+        </div>
+
+        {/* Top-left: source badge */}
+        <div className="absolute top-3 left-3 rounded-full bg-black/40 px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
+          {SOURCE_LABEL[card.source]}
+        </div>
+
+        {/* Top-right: difficulty */}
+        <div className="absolute top-3 right-3 flex flex-col items-center gap-1 rounded-full bg-black/40 p-2 backdrop-blur-sm">
+          {[1, 2, 3].map((i) => (
+            <span
+              key={i}
+              className={cn(
+                'block h-1.5 w-1.5 rounded-full',
+                i <= card.difficulty ? 'bg-white' : 'bg-white/25'
+              )}
+            />
+          ))}
+        </div>
+
+        {/* Title pill — overlaps art zone bottom */}
+        <div
+          className="relative z-10 mx-4 mb-[-1px] rounded-t-xl px-4 pt-2 pb-1"
+          style={{ backgroundColor: visual.titleBg }}
+        >
+          <h2 className="font-extrabold leading-tight tracking-tight text-white"
+            style={{ fontSize: ageGroup === '0-5' ? '1.25rem' : '1.1rem' }}
           >
-            {SOURCE_LABEL[card.source]}
-          </span>
-          <span className="text-xs opacity-60">{card.reference}</span>
+            {card.title}
+          </h2>
+          <p className="text-xs font-medium text-white/60">{card.reference}</p>
         </div>
-        <DifficultyDots level={card.difficulty} />
       </div>
 
-      {/* Title */}
-      <h2 className={cn('font-bold leading-tight', cfg.titleSize)}>{card.title}</h2>
+      {/* Content zone */}
+      <div className="flex flex-col gap-4 bg-white px-5 py-5 dark:bg-zinc-900">
+        {/* Summary */}
+        <p className={cn('font-semibold text-zinc-800 dark:text-zinc-100', SUMMARY_SIZE[ageGroup])}>
+          {summary}
+        </p>
 
-      {/* Summary */}
-      <p className={cn('font-medium', cfg.summarySize)}>{summary}</p>
-
-      {/* Verse */}
-      <div className="flex flex-col gap-1 rounded-xl border border-current/10 bg-white/30 px-4 py-3 dark:bg-black/20">
-        <div className="flex items-center gap-1.5 text-xs font-semibold opacity-60">
-          <BookOpen size={13} weight="bold" />
-          {card.verse}
-        </div>
-        <p className="text-sm italic leading-snug opacity-80">&ldquo;{card.verseText}&rdquo;</p>
-      </div>
-
-      {/* Full text — only for 12-14 */}
-      {ageGroup === '12-14' && card.fullText !== summary && (
-        <details className="group">
-          <summary className="cursor-pointer text-xs font-semibold opacity-50 hover:opacity-80">
-            Texto completo
-          </summary>
-          <p className="mt-2 text-sm leading-relaxed opacity-75">{card.fullText}</p>
-        </details>
-      )}
-
-      {/* Parent mode — only when ageGroup is 0-5 */}
-      {showParentMode && ageGroup === '0-5' && card.parentTip && (
-        <div className="flex flex-col gap-3 rounded-xl border border-amber-300/50 bg-white/40 px-4 py-3 dark:bg-black/20">
-          <div className="flex items-start gap-2">
-            <Star size={15} weight="fill" className="mt-0.5 shrink-0 text-amber-500" />
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wider opacity-60">Dica para o pai</p>
-              <p className="text-sm leading-snug">{card.parentTip}</p>
-            </div>
+        {/* Verse */}
+        <div className="rounded-2xl border border-zinc-100 bg-zinc-50 px-4 py-3 dark:border-zinc-700 dark:bg-zinc-800">
+          <div className="mb-1 flex items-center gap-1.5">
+            <BookOpen size={12} weight="bold" className="text-zinc-400" />
+            <span className="text-xs font-bold uppercase tracking-wide text-zinc-400">{card.verse}</span>
           </div>
-          {card.parentQuestion && (
-            <div className="flex items-start gap-2">
-              <ChatDots size={15} weight="fill" className="mt-0.5 shrink-0 text-amber-500" />
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider opacity-60">Pergunta de conversa</p>
-                <p className="text-sm italic leading-snug">{card.parentQuestion}</p>
-              </div>
-            </div>
-          )}
+          <p className="text-sm italic leading-snug text-zinc-600 dark:text-zinc-300">
+            &ldquo;{card.verseText}&rdquo;
+          </p>
         </div>
-      )}
 
-      {/* Theme tags */}
-      <div className="flex flex-wrap gap-1.5">
-        {card.themes.map((theme) => (
-          <span
-            key={theme}
-            className={cn(
-              'rounded-full px-2 py-0.5 text-xs opacity-70',
-              cfg.colorBadge,
-              cfg.colorBadgeText
+        {/* Full text (12-14 only) */}
+        {ageGroup === '12-14' && card.fullText !== summary && (
+          <details className="text-sm text-zinc-500">
+            <summary className="cursor-pointer font-semibold hover:text-zinc-700">Texto completo da CFW</summary>
+            <p className="mt-2 leading-relaxed">{card.fullText}</p>
+          </details>
+        )}
+
+        {/* Parent mode */}
+        {showParentMode && ageGroup === '0-5' && card.parentTip && (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 dark:border-amber-800 dark:bg-amber-950">
+            <p className="mb-1 text-xs font-bold uppercase tracking-wide text-amber-500">Dica para o pai</p>
+            <p className="text-sm text-amber-900 dark:text-amber-100">{card.parentTip}</p>
+            {card.parentQuestion && (
+              <>
+                <p className="mb-1 mt-3 text-xs font-bold uppercase tracking-wide text-amber-500">Pergunta sugerida</p>
+                <p className="text-sm italic text-amber-900 dark:text-amber-100">&ldquo;{card.parentQuestion}&rdquo;</p>
+              </>
             )}
-          >
-            {theme}
-          </span>
-        ))}
+          </div>
+        )}
       </div>
-    </article>
+
+      {/* Footer */}
+      <div className="flex items-center gap-2 border-t border-zinc-100 bg-white px-5 py-3 dark:border-zinc-800 dark:bg-zinc-900">
+        <div className="flex flex-wrap gap-1.5">
+          {card.themes.slice(0, 3).map((t) => (
+            <span
+              key={t}
+              className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
+              style={{ backgroundColor: visual.tagBg, color: visual.tagText }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+        <div className="ml-auto flex gap-0.5">
+          {[1, 2, 3].map((i) => (
+            <Star
+              key={i}
+              size={13}
+              weight={i <= card.difficulty ? 'fill' : 'regular'}
+              className={i <= card.difficulty ? 'text-amber-400' : 'text-zinc-200 dark:text-zinc-700'}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
